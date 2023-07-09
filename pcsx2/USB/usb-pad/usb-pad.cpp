@@ -644,6 +644,10 @@ namespace usb_pad
 				{
 					int ret = s->TokenIn(p->buffer_ptr, p->buffer_size);
 
+					if (s->pad->Type() == WT_BUZZ_CONTROLLER) {
+						dev->irq = 1;
+					}
+
 					if (ret > 0)
 						p->actual_length += std::min<u32>(static_cast<u32>(ret), p->buffer_size);
 					else

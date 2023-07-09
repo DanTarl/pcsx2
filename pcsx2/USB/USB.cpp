@@ -717,6 +717,19 @@ static u32 TryMapGenericMapping(SettingsInterface& si, const std::string& sectio
 	{
 		Console.WriteLn("(MapDevice) Map %s/%s to '%s'", section.c_str(), bind_name, found_mapping->c_str());
 		si.SetStringValue(section.c_str(), key.c_str(), found_mapping->c_str());
+
+		for (int i = 0; i < 2; i++) {
+			if (qemu_ohci && qemu_ohci->rhport[i].port.dev
+						&& qemu_ohci->rhport[i].port.dev->irq == 0) {
+				return 1;
+			}
+		}
+
+		static int irq = 0;
+		irq ++;
+		if (irq == 20) irq = 0;
+		return irq == 0 ? 1 : 0;
+
 		return 1;
 	}
 	else
